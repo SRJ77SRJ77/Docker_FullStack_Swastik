@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Docker Full Stack Application</title>
+</head>
+<body>
+
+    <h1>Contact Form</h1>
+
+    <form id="contactForm">
+
+        <p>
+            <input name="name" placeholder="Your name" required>
+        </p>
+
+        <p>
+            <input name="email" type="email"
+                   placeholder="Your email" required>
+        </p>
+
+        <p>
+            <textarea name="message"
+                      placeholder="Your message"
+                      required></textarea>
+        </p>
+
+        <button type="submit">Submit</button>
+
+    </form>
+
+    <p id="result"></p>
+
+    <script>
+        document.getElementById("contactForm")
+        .addEventListener("submit", async (event) => {
+
+            event.preventDefault();
+
+            const form = new FormData(event.target);
+            const data = Object.fromEntries(form.entries());
+
+            const response = await fetch("/submit", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            document.getElementById("result").textContent =
+                result.message || result.error;
+
+            if (response.ok) {
+                event.target.reset();
+            }
+        });
+    </script>
+
+</body>
+</html>
